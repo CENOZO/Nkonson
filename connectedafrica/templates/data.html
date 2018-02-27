@@ -1,0 +1,174 @@
+{% extends "layout.html" %}
+{% from 'macros/paginator.html' import paginate %}
+{% from "macros/profiles.html" import render_relation, render_property %}
+{% from "macros/snippets.html" import entity_link, relation_ts %}
+
+{% block title %}{{ display_name }}{% endblock %}
+
+{% block description %}
+  {% if entity.properties.tagline %}
+    {{ entity.properties.tagline.value | truncate }}
+  {% elif entity.properties.summary %}
+    {{ entity.properties.summary.value | truncate }}
+  {% endif %}
+{% endblock %}
+
+{% macro context_block() %}
+  <h1>
+    {% block displayname %}{{ display_name }}{% endblock %}
+  </h1>
+
+  {% if entity.properties.summary %}
+    <p class="legible-text">{{ entity.properties.summary.value | pa_shorten }}
+    {% if entity.properties.summary.source_url %}
+    <a target ="_blank" href="{{ entity.properties.summary.source_url }}" class="source-ref"
+              title="Source: {{ entity.properties.summary.source_url | source_readable }}"
+              data-toggle="tooltip" data-placement="right">
+              <i class="fa fa-external-link-square"></i>
+    </a>
+    {% endif %}
+    </p>
+  {% elif entity.properties.tagline %}
+    <p class="legible-text">{{ entity.properties.tagline.value | pa_shorten }}</p>
+  {% endif %}
+ 
+  <table class="table table-condensed table-properties">
+    {% for property in properties %}
+      <tr>
+        <th width="25%">{{property.label}}:</th>
+        <td class="property-value">
+          {{property.value}}
+          {% if property.source_url %}
+            <a target ="_blank" href="{{ property.source_url }}" class="source-ref"
+              title="Source: {{ property.source_url | source_readable }}"
+              data-toggle="tooltip" data-placement="right"><i class="fa fa-external-link-square"></i></a>
+            <!-- span class="source-ref"
+              title="Source: {{ property.source_url | source_readable }}"
+              data-toggle="tooltip" data-placement="right"><i class="fa fa-external-link-square"></i></span -->
+          {% endif %}
+        </td>
+      </tr>
+    {% endfor %}
+  </table>
+  <!--
+  <h5> Contracts Awarded</h5>
+  <table style="border-color: black, border:2">
+    <tr> <th width="10%">#</th> <th width="25%">date</th> <th width="25%">Amount</th> <th width="40%">Awording Agency</th> </tr>
+    <tr> <td width="10%">1</td> <td width="25%">2013</td> <td width="25%">10,000,000</td> <td width="40%">Ministry of Infrastructure</td> </tr>
+    <tr> <td width="10%">2</td> <td width="25%">2013</td> <td width="25%">10,000,000</td> <td width="40%">Ministry of Infrastructure</td> </tr>
+    <tr> <td width="10%">3</td> <td width="25%">2013</td> <td width="25%">10,000,000</td> <td width="40%">Ministry of Infrastructure</td> </tr>
+  </table>
+  -->
+{% endmacro %}
+
+
+{% macro search_bar() %}
+    <div class="row">
+        <form class="navbar-form" role="search" action="{{url_for('browser.view')}}">
+          <div class="input-group">
+            <span class="input-group-addon"><i class="fa fa-search"></i></span>
+            <input type="text" name="q" value="{{query_text}}"
+              class="form-control" placeholder="Search for politicians and companies">
+            {% for schema, url, active, count in sidebar_schemata %}
+              {% if active %}
+                <input type="hidden" name="schema" value="{{schema.name}}">
+              {% endif %}
+            {% endfor %}
+          </div>
+        </form>
+    </div>
+{% endmacro %}
+
+
+{% block content %}
+
+  <div class="row">
+    {{ search_bar() }}
+      {% if properties.image_url %}
+        <div class="col-sm-4">
+          <div>
+            <img src="{{ entity.properties.image_url.value }}" class="profile-image" alt="{{ display_name }}">
+          </div>
+          <div>
+            {{ context_block() }}
+          </div>
+        </div>
+      {% else %}
+        <div class="col-sm-4">  
+          {{ context_block() }}
+        </div>
+      {% endif %}
+      
+      <div class="col-sm-8">
+        <br/>
+        {% block banner2 %}
+          {% if entity.degree < 200 %}
+          <div class="profile-banner2">
+            <div class="image-box2">&nbsp;</div>
+            <div class="graph-box">
+              <div id="graph-container2">
+                <div id="graph-viz" data-entity-id="{{entity.id}}" data-api-endpoint="{{url_for('graph.proxy')}}"></div>
+              </div>
+            </div>
+          </div>
+          {% else %}
+          <div class="profile-banner2">
+            <div class="image-box2">&nbsp;</div>
+              <div class="graph-box" style="display: table-cell; color:#FFFFFF; width: 830px; height: 525px; vertical-align: middle">
+                  <h1 style="text-align:center"> This Entity has {{entity.degree}} connections</h1>
+                  <h3 style="text-align:center"> Only Entities with less than 200 connections are displayed</h3>
+              </div>
+          </div>       
+          {% endif %}
+
+        {% endblock %}
+        <br/>
+      </div>
+  </div>
+  <div>
+    {% for section in relation_sections %}
+      <h3 class="section-title">{{ section.schema.meta.section_label or section.schema.meta.plural or section.schema.label }}</h3>
+      <p>{{section.schema.meta.get('section_text', '')}}</p>
+      <table class="table table-condensed table-relations">
+        <tr>
+          <th>&nbsp;</th>
+          {% for k, v in section.schema.meta.get('section_table', {}).items() %}
+            {% if v == 'Amount' %}
+              <th style="text-align:right;">{{v}}</th>
+            {% else %}
+              <th>{{v}}</th>
+            {% endif %}
+          {% endfor %}
+          <th>Dates</th>
+          <th>Source</th>
+        </tr>
+        {% for relation in section.relations %}
+          <tr>
+            <td>
+              {{ entity_link(relation.other) }}
+            </td>
+            {% for k, v in section.schema.meta.get('section_table', {}).items() %}
+              {% if k == 'amount' %}
+                <td style="text-align:right;">{{ relation.props.get(k) or '-' }}</td>
+              {% else %}
+                <td>{{ relation.props.get(k) or '-' }}</td>
+              {% endif %}
+            {% endfor %}
+            <td width="10%">
+              {{ relation_ts(relation) }}
+            </td>
+            <td width="1%">
+              {% if relation | relation_source %}
+                {{ relation | relation_source | source_readable }}
+                <!--a href="{{ relation | relation_source }}" class="source-ref"
+                  title="Source: {{ relation | relation_source | source_readable }}"
+                  data-toggle="tooltip" data-placement="left"><i class="fa fa-external-link-square"></i></a-->
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+      </table>
+      {{ paginate(section.pager) }}
+    {% endfor %}
+  </div>
+{% endblock %}

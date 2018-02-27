@@ -1,0 +1,11 @@
+<div id="sidebar">
+  <ul class="list-group">
+    {% for schema, url, active, count in sidebar_schemata %}
+      <li id="{{schema.name}}" class="list-group-item">
+        <a class="fg-{{schema.name}}" href="{{url}}">{{schema.meta.plural or schema.label}}</a>
+        <small>{{count}}</small>
+      </li>
+    {% endfor %}
+  </ul>
+  <br><br>
+</div>

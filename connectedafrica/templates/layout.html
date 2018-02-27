@@ -1,51 +1,268 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}(Untitled){% endblock %} - {{APP_NAME}}</title>
-    <meta name="description" content="{% block description %}{{APP_SLOGAN}}{% endblock %}">
-    <meta name="keywords" content="{% block keywords %}power, influence, south africa, politics, corruption, connectedafrica, conflicts of interest, illicit ties, pretoria, cape town{% endblock %}">
-    <meta name="og:site_name" content="{{APP_NAME}}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}(Untitled){% endblock %} - {{APP_NAME}}</title>
+  <meta name="description" content="{% block description %}{{APP_SLOGAN}}{% endblock %}">
+  <meta name="keywords" content="{% block keywords %}power, influence, south africa, politics, corruption, connectedafrica, conflicts of interest, illicit ties, pretoria, cape town{% endblock %}">
+  <meta name="og:site_name" content="{{APP_NAME}}">
 
-    {% assets filters="less,cssmin,cssrewrite", output="gen/app.css",
-        "style/style.less"
-    %}
-      <link type="text/css" href="{{ ASSET_URL }}" rel="stylesheet">
-    {% endassets %}
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
-    <link href='//fonts.googleapis.com/css?family=Open+Sans:400,700,800,300' rel='stylesheet' type='text/css'>
+  {% assets filters="less,cssmin,cssrewrite", output="gen/app.css",
+  "style/style.less"
+  %}
+  <link type="text/css" href="{{ ASSET_URL }}" rel="stylesheet">
+  {% endassets %}
+  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href='//fonts.googleapis.com/css?family=Open+Sans:400,700,800,300' rel='stylesheet' type='text/css'>
 
-    <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.png') }}">
-  </head>
-  <body>
-    {% include 'header.html' %}
-    {% block banner %}{% endblock %}
-    <div class="container">
-      <div class="row">
-        <div class="col-sm-3 hidden-xs">
-          {% include 'sidebar.html' %}
-        </div>
-        <div class="col-sm-9">
-          {% block content %}{% endblock %}
-        </div>
+  <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.gif') }}">
+</head>
+<body data-spy="scroll" data-target="#spy-scroll-id">
+  <div class="row" style="margin-left: 0px; margin-right: 0px;">
+    {% include 'menu.html' %}
+  </div>
+  <div class="containerh">
+    <div class="row" style="margin-left: 0px; margin-right: 0px;">
+      {% block banner %}{% endblock %}
     </div>
+    {% block content %}{% endblock %}
+  </div>
+
+  <div id="testjq">
+
+  </div>
+
     {% include 'footer.html' %}
     
     {% assets filters="uglifyjs", output="gen/app.js",
-          "vendor/jquery/dist/jquery.js",
-          "vendor/bootstrap/js/collapse.js",
-          "vendor/bootstrap/js/dropdown.js",
-          "vendor/bootstrap/js/tooltip.js",
-          "vendor/d3/d3.js",
-          "vendor/webcola/WebCola/cola.v3.min.js",
-          "js/app.js",
-          "js/graph.js"
-      %}
-      <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+    "vendor/jquery/dist/jquery.js",
+    "vendor/bootstrap/js/collapse.js",
+    "vendor/bootstrap/js/dropdown.js",
+    "vendor/bootstrap/js/tooltip.js",
+    "vendor/bootstrap/js/transition.js",
+    "vendor/bootstrap/js/tab.js",
+    "vendor/d3/d3.js",
+    "vendor/webcola/WebCola/cola.v3.min.js",
+    "js/app.js",
+    "js/graph.js"
+    %}
+
+    <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+
     {% endassets %}
 
     {% include 'ga.html' %}
+
+    <script>
+      // function that updates the country stats for a given schema
+      function country_schema_stats(country_code, schema){
+        var url = "http://grano.nanoapp.io/api/1/entities?schema=" + schema + "&property-country_code=" + country_code
+        console.log(url)
+        $.get(url, function(data, status){
+          var el1 = "#" + schema + " a"; 
+          var el2 = "#"+ schema + " small"; 
+          $(el1).attr("href", "/search?q=&schema=" + schema + "&country=" + country_code);
+          $(el2).text(data.total);
+
+          console.log(data.pages);
+        });
+      };
+
+      // function that updates the country stats for all schemas
+      function country_stats(country_code){
+        var schemas = ["Person", "Company", "Agency", "PoliticalParty"];
+        schemas.forEach(function(element) {
+          country_schema_stats(country_code, element);
+        });
+        top_connected("Person", country_code);
+        top_connected("Company", country_code);
+      };
+
+
+      function slugify(text)
+      {
+        return text.toString().toLowerCase()
+          .replace(/\s+/g, '-')           // Replace spaces with -
+          .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
+          .replace(/\-\-+/g, '-')         // Replace multiple - with single -
+          .replace(/^-+/, '')             // Trim - from start of text
+          .replace(/-+$/, '');            // Trim - from end of text
+      }
+
+
+      function entity_link(ent, schema){
+            name = ent.properties.name.value;
+            slug = slugify(name);
+            url = "profile/"+ ent.id + "/" + slug; 
+            link = "<a class='" + "fg-" + schema + " simple' " + "href='" + url + "'>" + name + "</a>";
+            return link;
+      } 
+
+      // This function updates the top conected tabs
+      function top_connected(schema, country_code){
+        ressources = get_ressources("entities", schema, country_code);
+        res = ressources.slice(0, 7);
+        content = ""
+        for (r in res){     
+          var s = "<tr>" + "<td>" + entity_link(res[r], schema) + "</td>" + "<td class='num'>" + res[r].degree + "</td>" + "</tr> ";
+          content += s;
+        }
+        remaining = ressources.length - 7;
+        if (remaining >= 0){
+           tab_footer = "<tr><td colspan='2' class='num'>...and " + remaining + " more </td></tr>";
+        }
+        else{
+          root_url = "/"
+          tab_footer = "<tr><td>Nothing to show for " + get_country_name(country_code) + "</td><td>Reload <a href='" + root_url + "'>ALL COUNTRIES</a></td><tr>"
+        }
+        content += tab_footer;
+
+        console.log("\n\n################################ Content");
+        console.log(content);
+        $("#top_" + schema).html(content);
+        $("#tab_toplist").load();
+      }
+
+
+      // function that gets country code from country tittle
+      function get_country_code(country_title){
+        if (country_title==="Ghana") {country_code = "GHA"} 
+        else if  (country_title==="Burkina Faso") {country_code = "BFA"}
+        else if  (country_title==="Niger") {country_code = "NIG"}
+        else if  (country_title==="Nigeria") {country_code = "NGR"}
+        else if  (country_title==="Mali") {country_code = "MAL"}
+        else if  (country_title==="Senegal") {country_code = "SEN"}
+        else if  (country_title==="Côte d'Ivoire") {country_code = "RCI"}
+        else if  (country_title==="Benin") {country_code = "BEN"}
+        else if  (country_title==="Togo") {country_code = "TOG"}
+        else if  (country_title==="Liberia") {country_code = "LIB"}
+        else if  (country_title==="Sierra Leone") {country_code = "SLE"}
+        else if  (country_title==="Guinea") {country_code = "GUI"}
+        else if  (country_title==="Mauritania") {country_code = "MAU"}
+        else country_code = "";
+        return country_code;
+      };
+
+
+
+      // function that gets country name from country code
+      function get_country_name(country_code){
+        if (country_code==="GHA") {country_name = "Ghana"} 
+        else if  (country_code==="BFA") {country_name = "Burkina Faso"}
+        else if  (country_code==="NIG") {country_name = "Niger"}
+        else if  (country_code==="NGR") {country_name = "Nigeria"}
+        else if  (country_code==="MAL") {country_name = "Mali"}
+        else if  (country_code==="SEN") {country_name = "Senegal"}
+        else if  (country_code==="RCI") {country_name = "Côte d'Ivoire"}
+        else if  (country_code==="BEN") {country_name = "Benin"}
+        else if  (country_code==="TOG") {country_name = "Togo"}
+        else if  (country_code==="LIB") {country_name = "Liberia"}
+        else if  (country_code==="SLE") {country_name = "Sierra Leone"}
+        else if  (country_code==="GUI") {country_name = "Guinea"}
+        else if  (country_code==="MAU") {country_name = "Mauritania"}
+        else country_name = "";
+        return country_name;
+      };
+
+      // the click on the country event: updates the country stats
+      $("svg a").click(function(){
+        var country_title = $(this).attr("title");
+        var country_text = $(this).attr("text");
+        $("#title").hide().text(country_title).fadeIn(200);
+        $("#text").hide().text(country_text).fadeIn(200);
+        $("#reset").html(reset_code);
+        $("svg, path").attr("class", "land");
+        c = $("path", this).attr("class") + " " + "clicked";
+        $("path", this).attr("class", c);
+        $(".front-page hr").removeClass("hidden");
+        var country_code = get_country_code(country_title);
+        country_stats(country_code);
+      });
+
+    </script>
+
+    <script type="text/javascript">
+
+      // function that highlights the active menu
+      function menu_active(){
+        $("#navbar .nav").find(".active").removeClass("active");
+        if (document.location.pathname == "/"){
+          $("#navhome").addClass("active");
+          console.log(document.location.pathname);
+        }
+        else if (document.location.pathname == "/pages/about.html"){
+          $("#navabout").addClass("active");
+          console.log(document.location.pathname);
+        }
+        else if (document.location.pathname == "/pages/contact.html") {
+          $("#navcontact").addClass("active");
+          console.log(document.location.pathname);
+        }
+        else {
+          $("#navdata").addClass("active");
+          console.log(document.location.pathname);
+        }
+      }
+
+
+
+      // function that gets an url given a schena and a country code
+      function get_url(ressource_type="entities", schema="Person", country_code="GHA", limit=500, offset=0){
+        return "http://grano.nanoapp.io/api/1/" + ressource_type + "?schema=" + schema + "&property-country_code=" + country_code + "&limit="+ limit + "&offset=" + offset;
+      };
+
+      // function that gets ressources from a url
+      function get_res_url(url)
+      {
+        var result = null;
+        $.ajax({
+          url: url,
+          type: 'get',
+          dataType: 'JSON',
+          async: false,
+          success: function(data) {
+              result = data;
+          }
+        });
+        return result;
+      };
+
+      // function that gets sorted ressources by country and schema
+      function get_ressources(ressource_type="entities", schema=null, country_code=null)
+      {
+        url = get_url(ressource_type, schema, country_code, 10, 0);
+        total = get_res_url(url).total;
+        limit = 100;
+        offset = 0;
+        var res = [];
+        while (offset <= total){
+            url = get_url(ressource_type, schema, country_code, limit, offset);
+            var result = null;
+            $.ajax({
+              url: url,
+              type: 'get',
+              dataType: 'JSON',
+              async: false,
+              success: function(data) {
+                  result = data;
+              }
+            });
+            res = res.concat(result.results);
+            offset += limit;
+        }
+        return res.sort(function(a, b){return b.degree - a.degree});
+      };
+
+
+      // Main call at page load
+      $(document).ready(function () {
+        menu_active();
+        // entities = get_ressources("entities", "Person", "GHA");
+
+      });
+
+    </script>
   </body>
-</html>
+  </html>
 

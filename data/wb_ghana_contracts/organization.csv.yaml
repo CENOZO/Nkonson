@@ -1,0 +1,23 @@
+
+entities:
+  company:
+    schema: 'Organization'
+    source_url_column: 'data_source'
+    columns:
+      - column: 'organization_country'
+        property: 'origin_country'
+      - column: 'organization_country_code'
+        property: 'country_code'
+      - column: 'industry'
+        property: 'industry'
+      - column: 'organization_name'
+        property: 'name'
+      - column: 'organization_email'
+        property: 'contact_email'
+        skip_empty: true
+      - column: 'awarding_organization_link'
+        property: 'contact_url'
+        skip_empty: true
+      - column: 'address'
+        property: 'contact_address_postal'
+        skip_empty: true

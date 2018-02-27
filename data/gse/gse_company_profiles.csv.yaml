@@ -1,0 +1,43 @@
+
+entities:
+  company:
+    schema: 'Company'
+    source_url_column: 'data_source'
+    columns:
+      - column: 'company_name'
+        property: 'name'
+      - column: 'country'
+        property: 'origin_country'
+      - column: 'country_code'
+        property: 'country_code'
+        skip_empty: true
+      - column: 'Exchange'
+        property: 'listing_exchange'
+        default: 'GSE Limited'
+      - column: 'website'
+        property: 'contact_url'
+        skip_empty: true
+      - column: 'email'
+        property: 'contact_email'
+        skip_empty: true
+      - column: 'telephone'
+        property: 'contact_phone'
+        skip_empty: true
+      - column: 'postal_address'
+        property: 'contact_address_postal'
+        skip_empty: true
+      - column: 'data_source'
+        property: 'data_source'
+        skip_empty: true
+      - column: 'scraped_time'
+        property: 'scraped_time'
+        skip_empty: true
+      - column: 'scraped_time'
+        property: 'scraped_time'
+        skip_empty: true
+      - column: 'scraped_time'
+        property: 'scraped_time'
+        skip_empty: true
+      - column: 'industry'
+        property: 'industry'
+        skip_empty: true

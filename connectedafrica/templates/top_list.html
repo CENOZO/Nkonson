@@ -1,0 +1,32 @@
+{% from 'macros/snippets.html' import connections, entity_link %}
+{% macro top_list(res, title) %}
+<h5>{{title}}</h5>
+<table class="table table-condensed" id="{{'top_' + res.data.results[0].schema.name}}">
+  {% for ent in res %}
+  <tr>
+    <td>{{ entity_link(ent) }}</td>
+    <td class="num">{{ ent.degree }}</td>
+  </tr>
+  {% endfor %}
+  <tr>
+    <td colspan="2" class="num">...and {{res.data.total - res.data.limit}} more</td>
+  </tr>
+</table>
+{% endmacro %}
+
+  <ul class="nav nav-tabs" id="tab_toplist">
+    <li class="active"><a data-toggle="tab" href="#summary">Summary</a></li>
+    <li><a data-toggle="tab" href="#tcp">Top Connected politicians</a></li>
+    <li><a data-toggle="tab" href="#tcc">Top Connected Organizations</a></li>
+  </ul>
+  <div class="tab-content">
+    <div id="summary" class="tab-pane fade  in active">
+      {% include 'stats_vert.html' %}
+    </div>
+    <div id="tcp" class="tab-pane fade">
+      {{ top_list(people, 'Top Connected politicians')}}
+    </div>
+    <div id="tcc" class="tab-pane fade">
+      {{ top_list(orgs, 'Top Connected Organizations')}}
+    </div>
+  </div>

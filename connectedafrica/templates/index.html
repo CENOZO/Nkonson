@@ -1,4 +1,5 @@
 {% extends "layout.html" %}
+
 {% from 'macros/snippets.html' import connections, entity_link %}
 
 {% block title %}
@@ -6,42 +7,43 @@
 {% endblock %}
 
 {% block banner %}
-  <div class="home-banner">
-    <div class="container">
-      <h1>
-        {{APP_NAME}}
-        <small>{{APP_SLOGAN}}</small>
-      </h1>
-    </div>
-  </div>
-{% endblock %}
 
-{% macro top_list(res, title) %}
-  <h4>{{title}}</h4>
-  <table class="table table-condensed">
-    {% for ent in res %}
-      <tr>
-        <td>{{ entity_link(ent) }}</td>
-        <td class="num">{{ ent.degree }}</td>
-      </tr>
-    {% endfor %}
-    <tr>
-        <td colspan="2" class="num">...and {{res.data.total - res.data.limit}} more</td>
-    </tr>
-  </table>
-{% endmacro %}
 
-{% block content %}
-  <p class="home-teaser">
-    {{APP_NAME}} provides users with a tool to investigate the connections that exist between the private and public spheres in South Africa. Specifically, it provides a unique insight into the financial connectivities that can, and often do, determine how, when, and why money is expended by government. 
-    <a href='{{url_for('base.page', path='about')}}'>Read more...</a>
-  </p>
   <div class="row">
-    <div class="col-sm-6">
-      {{ top_list(people, 'Connected politicians')}}
+    <div class="col-md-5 hidden-xs hidden-sm">
+      {% include 'westafricamap.html' %}
+      <div class="hidden-xs hidden-sm">
+        <h3 id="title">All Countries</h3>
+        <hr>
+        <div id="text">Click on a country to find out more about its connections</div>
+        <br>
+        <div>
+          {% include 'top_list.html' %}
+        </div>
+      </div>
     </div>
-    <div class="col-sm-6">
-      {{ top_list(orgs, 'Connected companies')}}
+    <div class="col-md-7">
+        <p class="home-teaser">
+          {{APP_NAME}} connects the dots between private and public sphere and see the power structures in the region through scraping, bulks of data available already and leaked documents. Users when they type a name of politician they will see whether that person is shareholder or have interest in companies. 
+          <a href='{{url_for('base.page', path='about')}}'>Read more...</a>
+        </p>
+        <div class="home-banner">
+          <div class="container">
+            <h1>
+              {{APP_NAME}}
+              <small>{{APP_SLOGAN}}</small>
+            </h1>
+          </div>
+
+        </div>
+        <div class="adv_search_text"><h3> Advanced Search</h3></div>
+        <div class="adv_search">
+            {% include 'search_form.html' %}
+        </div>
     </div>
   </div>
+
+
+
 {% endblock %}
+

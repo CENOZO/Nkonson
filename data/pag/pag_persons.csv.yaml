@@ -1,0 +1,45 @@
+
+entities:
+  person:
+    schema: 'Person'
+    source_url_column: 'data_source'
+    columns:
+     - column: 'country'
+       property: 'origin_country'
+     - column: 'country_code'
+       property: 'country_code'
+     - column: 'person_name'
+       property: 'name'
+     - column: 'given_name'
+       property: 'given_name'
+       skip_empty: true
+     - column: 'family_name'
+       property: 'family_name'
+       skip_empty: true
+     - column: 'person_name'
+       property: 'display_name'
+       skip_empty: true
+     - column: 'religion'
+       property: 'religion'
+       skip_empty: true
+     - column: 'email'
+       property: 'contact_email'
+       skip_empty: true
+     - column: 'education'
+       property: 'summary'
+       skip_empty: true
+     - column: 'date_birth'
+       property: 'date_birth'
+       skip_empty: true
+     - column: 'image_url'
+       property: 'image_url'
+       skip_empty: true
+     - column: 'hometown'
+       property: 'hometown'
+       skip_empty: true
+     - column: 'scraped_time'
+       property: 'scraped_time'
+       skip_empty: true
+     - column: 'employment'
+       property: 'employment'
+       skip_empty: true

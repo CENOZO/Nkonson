@@ -1,0 +1,20 @@
+
+entities:
+  company:
+    schema: 'Agency'
+    source_url_column: 'awarding_agency_link'
+    columns:
+      - column: 'agency_name'
+        property: 'name'
+      - column: 'awarding_ministry'
+        property: 'ministry'
+        skip_empty: true
+      - column: 'country'
+        property: 'origin_country'
+        skip_empty: true
+      - column: 'country_code'
+        property: 'country_code'
+        skip_empty: true
+      - column: 'industry'
+        property: 'industry'
+        skip_empty: true

@@ -7,6 +7,10 @@ pyenv/*
 *.pyc
 .cache
 *.sublime*
+.nanobox/*
+boxfile.yml
+Makefile
+Makefile_old
 
 build
 dist
@@ -14,7 +18,10 @@ dist
 connectedafrica/static/vendor/*
 connectedafrica/static/gen/*
 connectedafrica/static/.webassets-cache/*
+connectedafrica/settings.py
+connectedafrica/default_settings.py
 settings.py
+
 
 data/.cache/*
 data/gdocs/*.csv
@@ -23,5 +30,11 @@ data/npo/matched/*.csv
 data/whoswho/*.csv
 data/cipc_pdfs/*
 data/profileimages.csv
+data/degrees/*
+data/gse/*.csv
+data/pag/*.csv
+data/wb_ghana_contracts/*.csv
+data/ppa/*.csv
+
 
 reports/*

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}(Untitled){% endblock %} - {{APP_NAME}}</title>
+  <meta name="description" content="{% block description %}{{APP_SLOGAN}}{% endblock %}">
+  <meta name="keywords" content="{% block keywords %}power, influence, south africa, politics, corruption, connectedafrica, conflicts of interest, illicit ties, pretoria, cape town{% endblock %}">
+  <meta name="og:site_name" content="{{APP_NAME}}">
+
+  {% assets filters="less,cssmin,cssrewrite", output="gen/app.css",
+  "style/style.less"
+  %}
+  <link type="text/css" href="{{ ASSET_URL }}" rel="stylesheet">
+  {% endassets %}
+  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href='//fonts.googleapis.com/css?family=Open+Sans:400,700,800,300' rel='stylesheet' type='text/css'>
+
+  <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.png') }}">
+</head>
+<body>
+  <div class="row">
+    {% include 'menu.html' %}
+  </div>
+  <div class="row">
+    <div class="col-md-4 hidden-xs hidden-sm">
+      {% include 'westafricamap.html' %}
+    </div>
+    <div class="col-md-8">
+        <p class="home-teaser">
+          {{APP_NAME}} provides users with a tool to investigate the connections that exist between the private and public spheres in South Africa. Specifically, it provides a unique insight into the financial connectivities that can, and often do, determine how, when, and why money is expended by government. 
+          <a href='{{url_for('base.page', path='about')}}'>Read more...</a>
+        </p>
+      <div class="hidden-xs hidden-sm">
+        <hr>
+        <h3 id="title">&nbsp;</h3>
+        <div id="text">Click on a country to find out more about its whistleblower laws, procedures and cases</div>
+
+        <div> {% include 'stats.html' %}</div>
+        <hr>
+        <div>
+          {% include 'top_list.html' %}
+        </div>
+      </div>
+    </div>
+  </div>
+  {% block banner %}{% endblock %}
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-3 hidden-xs">
+        {% include 'sidebar.html' %}
+      </div>
+      <div class="col-sm-9">
+        {% block content %}{% endblock %}
+      </div>
+    </div>
+    {% include 'footer.html' %}
+    
+    {% assets filters="uglifyjs", output="gen/app.js",
+    "vendor/jquery/dist/jquery.js",
+    "vendor/bootstrap/js/collapse.js",
+    "vendor/bootstrap/js/dropdown.js",
+    "vendor/bootstrap/js/tooltip.js",
+    "vendor/d3/d3.js",
+    "vendor/webcola/WebCola/cola.v3.min.js",
+    "js/app.js",
+    "js/graph.js"
+    %}
+
+    <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+    {% endassets %}
+
+    {% include 'ga.html' %}
+    <script>
+      $("svg a").click(function(){
+        var country_title = $(this).attr("title")
+        var country_text = $(this).attr("text")
+        $("#title").hide().text(country_title).fadeIn(200)
+        $("#text").hide().text(country_text).fadeIn(200)
+        $("svg path").removeClass("clicked")
+        $("path", this).addClass("clicked")
+        $(".front-page hr").removeClass("hidden")
+      });
+    </script>
+  </body>
+  </html>
+

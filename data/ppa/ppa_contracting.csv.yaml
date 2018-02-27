@@ -1,0 +1,44 @@
+entities:
+  company:
+    schema: 'Company'
+    source_url_column: 'data_source'
+    columns:
+     - column: 'company_name'
+       property: 'name'
+  agency:
+    schema: 'Agency'
+    source_url_column: 'data_source'
+    columns:
+     - column: 'agency_name'
+       property: 'name'
+relations:
+  contracting:
+    schema: 'Contract'
+    source_url_column: 'data_source'
+    source: 'company'
+    target: 'agency'
+    columns:
+     - column: 'contract_title'
+       property: 'contract_title'
+       skip_empty: true
+     - column: 'contract_signed_on'
+       property: 'date_signature'
+       type: datetime
+       skip_empty: true
+       format:
+          day: '%Y-%m-%d'
+     - column: 'contract_award_price'
+       property: 'amount'
+       skip_empty: true
+     - column: 'currency'
+       property: 'currency'
+       skip_empty: true
+     - column: 'industry'
+       property: 'industry'
+       skip_empty: true
+     - column: 'country'
+       property: 'country'
+       skip_empty: true
+     - column: 'country_code'
+       property: 'country_code'
+       skip_empty: true

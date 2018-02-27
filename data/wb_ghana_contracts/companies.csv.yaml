@@ -1,0 +1,20 @@
+
+entities:
+  company:
+    schema: 'Company'
+    source_url_column: 'data_source'
+    columns:
+      - column: 'country'
+        property: 'origin_country'
+      - column: 'country_code'
+        property: 'country_code'
+      - column: 'major_sector'
+        property: 'industry'
+      - column: 'company_name'
+        property: 'name'
+      - column: 'company_email'
+        property: 'contact_email'
+        skip_empty: true
+      - column: 'address'
+        property: 'contact_address_postal'
+        skip_empty: true

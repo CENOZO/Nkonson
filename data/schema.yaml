@@ -58,7 +58,9 @@
     # - For companies, the jurisdiction in which they are registered
     - name: origin_country
       label: 'Country'
-
+    - name: country_code
+      label: 'Country Code'
+      
     # Built-in external identifiers
     - name: xid_popolo
       service_url: 'http://za-new-import.popit.mysociety.org/'
@@ -94,6 +96,12 @@
       label: 'Thumbnail image credit'
       hidden: true
 
+    # Scraping Time and Source
+    - name: scraped_time
+      label: 'Scraped Time'
+    - name: data_source
+      label: 'Data Source'
+
 
 #####################################################################
 # Entity: Person
@@ -123,6 +131,12 @@
       datatype: datetime
     - name: birth_town
       label: 'Birth town'
+    - name: hometown
+      label: 'Hometown'
+    - name: education
+      label: 'Education'
+    - name: religion
+      label: 'Religion'
     # TODO: do we really want these?
     - name: display_name
       label: 'Name used for display'
@@ -133,7 +147,10 @@
     - name: national_id
       label: ID number
     - name: passport_number
-      label: Passport number
+      label: 'Passport number'
+    # Profile image
+    - name: image_url
+      label: 'Profile image'
 
 
 #####################################################################
@@ -182,12 +199,35 @@
   meta:
     plural: 'Companies'
   attributes:
+    - name: industry
+      label: 'Industry'
     - name: ticker_symbol
       label: 'Ticker symbol'
     - name: listing_status
       label: 'Status of stock listing'
     - name: listing_exchange
       label: 'Stock exchange'
+
+#####################################################################
+# Entity: Government Agency
+#####################################################################
+- name: 'Agency'
+  label: 'Government Agency'
+  description: 'A Government Agency'
+  hidden: false
+  obj: 'entity'
+  parent: 'Organization'
+  meta:
+    plural: 'Agencies'
+  attributes:
+    - name: industry
+      label: 'Industry'
+    - name: ticker_symbol
+      label: 'Ticker symbol'
+    - name: agency_link
+      label: 'Link to agency info'
+    - name: ministry
+      label: 'Ministry'
 
 
 #####################################################################
@@ -288,6 +328,7 @@
       datatype: datetime
 
 
+
 #####################################################################
 # Relation: Membership
 #####################################################################
@@ -325,9 +366,59 @@
     schema_text: >
       Directorships are held by members of an organization's board of directors.
       Some directors might also serve as officers, depending on the organization.
+    section_label: 'Directorships'
+    section_table:
+      role: 'Position'
   attributes:
     - name: status
       label: 'Status'
+    - name: role
+      label: 'Role'
+    - name: date_position
+      label: 'Periode of Position'
+
+
+#####################################################################
+# Relation: Contract
+#####################################################################
+- name: 'Contract'
+  label: 'Contract'
+  description: 'An entity contracts with another entity'
+  hidden: false
+  parent: 'Relation'
+  obj: relation
+  meta:
+    plural: 'Contracts'
+    section_label: 'Contracts'
+    section_table:
+      contract_title: 'Contract Title'
+      amount: 'Amount'
+      currency: 'Currency'
+      date_signature: 'Signature date'
+  attributes:
+    - name: industry
+      label: 'Industry'
+    - name: contract_title
+      label: 'Contract Title'
+    - name: date_signature
+      label: 'Signed on'
+      datatype: datetime
+    - name: amount
+      label: 'Amount'
+    - name: currency
+      label: 'Currency'
+    - name: country
+      label: 'Country'
+    - name: country_code
+      label: 'Country Code'
+    - name: procurement_category
+      label: 'Procurement Category'
+    - name: procurement_method
+      label: 'Procurement Method'
+    - name: project_name
+      label: 'Project Name'
+    - name: project_id
+      label: 'project ID'  
 
 
 #####################################################################
@@ -345,6 +436,9 @@
       Officers are elected by an organization's board of directors. Offices include
       CEO, President and Secretary. Some officers might also
       serve as directors, depending on the organization.
+    section_label: 'Officers'
+    section_table:
+      role: 'Position'
   attributes:
     - name: role
       label: 'Role'

@@ -1,0 +1,62 @@
+<div class="search_form">
+    <ul class="nav nav-tabs" id="tabs">
+      <li class="active"><a data-toggle="tab" href="#by_country"><h3>Search by country</h2></a></li>
+      <li><a data-toggle="tab" href="#by_industry"><h3>Search by industry</h2></a></li>
+    </ul>
+    <div class="tab-content search_box search_content">
+        <div id="by_country" class="tab-pane fade active in">
+            <form class="navbar-form" role="search" action="{{url_for('browser.view')}}">
+              <div class="input-group">
+                <input name="utf8" type="hidden" value="✓">
+                <input type="text" name="q" value="{{query_text}}" id="q1" placeholder="Enter any search term here..." class="search_field" autocomplete="off">
+                <div id="c-cont" style="display: inline-block;">
+                    <select name="country" id="c"><option value="">All countries</option>
+                    <option value="BFA">Burkina Faso</option>
+                    <option value="CPV">Cape Verde</option>
+                    <option value="CIV">Côte d'Ivoire</option>
+                    <option value="GMB">Gambia</option>
+                    <option value="GHA">Ghana</option>
+                    <option value="GIN">Guinea</option>
+                    <option value="GNB">Guinea-Bissau</option>
+                    <option value="MLI">Mali</option>
+                    <option value="NER">Niger</option>
+                    <option value="NGA">Nigeria</option>
+                    <option value="SEN">Senegal</option>
+                    <option value="SLE">Sierra Leone</option>
+                    <option value="TGO">Togo</option>
+                    <option value="XXX">Not identified</option></select>
+                    <i class="fa fa-caret-down"></i>
+                </div>
+
+                <input type="hidden" name="e" id="e">
+                <input type="submit" name="commit" value="Search"  action="{{url_for('browser.view')}}">
+                <div class="tip">To search, enter a term in the box. Leave it blank and select a country or jurisdiction to see a full list of names.</div>
+              </div>
+          </form>
+        </div>
+        <div id="by_industry" class="tab-pane fade">
+            <form class="navbar-form" role="search" action="{{url_for('browser.view')}}">
+                <div class="input-group">
+                    <input name="utf8" type="hidden" value="✓">
+                    <input type="text" name="q" value="{{query_text}}"  id="q2" placeholder="Enter any search term here..." class="search_field" autocomplete="off">
+                    <div class="select_cont" id="j-cont" style="display: inline-block;">
+                        <select name="industry" id="j"><option value="">All Industries</option>
+                        <option value="MIN">Mines</option>
+                        <option value="CON">Construction</option>
+                        <option value="TEL">Telecom</option>
+                        <option value="PHA">Pharmacy</option>
+                        <option value="ENE">Energy</option>
+                        <option value="TRA">Transport</option>
+                        <option value="RES">Real Estate</option>
+                        <option value="XXX">Undetermined</option></select>
+                        <i class="fa fa-caret-down"></i>
+                    </div>
+
+                    <input type="hidden" name="f" id="f">
+                    <input type="submit" name="commit2" value="Search" action="{{url_for('browser.view')}}">
+                    <div class="tip">To search, enter a term in the box. Leave it blank and select a country or industry to see a full list.</div>
+              </div>
+          </form>
+        </div>
+    </div> 
+</div>

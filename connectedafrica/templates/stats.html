@@ -1,0 +1,5 @@
+{% for schema, url, active, count in sidebar_schemata %}
+<div class="col-md-2 stats">
+  <span> <a class="fg-{{schema.name}}" href="{{url}}">{{schema.meta.plural or schema.label}}</a> (<small>{{count}}</small>)</span>
+</div>
+{% endfor %}

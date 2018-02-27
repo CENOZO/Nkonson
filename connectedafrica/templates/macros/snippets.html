@@ -16,6 +16,8 @@
     {% endif %}
   {% elif 'date_end' in rel.props %}
     until {{ rel.props.date_end.value.strftime('%b %Y') }}
+  {% elif 'date_position' in rel.props %}
+    {{ rel.props.date_position.value }}
   {% else %}
     &mdash;
   {% endif %}

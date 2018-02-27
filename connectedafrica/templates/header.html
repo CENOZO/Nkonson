@@ -11,7 +11,7 @@
         <div class="input-group">
           <span class="input-group-addon"><i class="fa fa-search"></i></span>
           <input type="text" name="q" value="{{query_text}}"
-            class="form-control" placeholder="Search for politicians and companies in South Africa">
+            class="form-control" placeholder="Search for politicians and companies">
           {% for schema, url, active, count in sidebar_schemata %}
             {% if active %}
               <input type="hidden" name="schema" value="{{schema.name}}">

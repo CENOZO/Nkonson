@@ -1,0 +1,23 @@
+
+entities:
+  person:
+    schema: 'Person'
+    source_url_column: 'data_source'
+    columns:
+     - column: 'person_name'
+       property: 'name'
+  company:
+    schema: 'Company'
+    source_url_column: 'data_source'
+    columns:
+      - column: 'company_name'
+        property: 'name'
+relations:
+  relation:
+    schema: 'Office'
+    source: 'person'
+    target: 'company'
+    source_url_column: 'data_source'
+    columns:
+      - column: 'position'
+        property: 'role'

@@ -1,0 +1,40 @@
+<div class="container-fluid" style="padding-left: 0px; padding-right: 0px;">
+  <nav class="navbar navbar-inverse testnav" role="navigation">
+    <div class="navbar-header col-sm-2">
+      <a class="navbar-brand" href="{{url_for('base.index')}}">
+        <img src="{{ url_for('static', filename='images/logo.gif') }}">
+        {{APP_NAME}}
+      </a>
+    </div>
+    <div class="navbar-header col-sm-3">
+      <ul class="nav navbar-nav" id="navbar">
+        <li id="navhome" class="nav-item"><a href="{{url_for('base.index')}}">Home</a></li>
+        <li id="navabout" class="nav-item" ><a href="{{url_for('base.page', path='about')}}">About</a></li>
+        <li id="navdata" class="nav-item"><a href="{{url_for('browser.view')}}">Data</a></li>
+        <li id="navcontact" class="nav-item"><a href="{{url_for('base.page', path='contact')}}">Contact</a></li>
+      </ul>
+    </div>
+    <div class="navbar-header col-sm-5">
+      <form class="navbar-form" role="search" action="{{url_for('browser.view')}}">
+        <div class="input-group">
+          <span class="input-group-addon"><i class="fa fa-search"></i></span>
+          <input type="text" name="q" value="{{query_text}}"
+            class="form-control" placeholder="Search for politicians and companies">
+          {% for schema, url, active, count in sidebar_schemata %}
+            {% if active %}
+              <input type="hidden" name="schema" value="{{schema.name}}">
+            {% endif %}
+          {% endfor %}
+        </div>
+      </form>
+    </div>
+    <!--
+    <div class="navbar-header col-sm-2">
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+        <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+      </ul>
+    </div>
+    -->
+  </nav>
+</div>

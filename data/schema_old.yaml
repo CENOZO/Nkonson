@@ -1,0 +1,469 @@
+#
+# connectedAfrica data model, v. 0.1
+#
+# This is the data model for the South African version of connectedAfrica, and
+# it will eventually be extended to be generic enough to cover other instances
+# as well.
+#
+# Conventions:
+# * 'xid_*': an external identifier (e.g. numeric, GUID)
+# * 'xurl_*': an external identifier URL
+#
+
+
+# Overwrite the base model to add some common properties.
+- name: 'Entity'
+  label: 'Common base schema'
+  obj: 'entity'
+  hidden: true
+  attributes:
+
+    # Core identifier.
+    - name: name
+      label: Name
+      unique: true
+
+    # URL-ready form of the name
+    # WARNING: as slugification is a lossy process, this may no longer be
+    # unique, even if the name is.
+    - name: slug
+      label: 'URL Slug'
+      hidden: true
+
+    # A short one-line summary of the entity.
+    - name: tagline
+      label: 'Tagline'
+
+    # A longer, one paragraph summary of the entity.
+    - name: summary
+      label: 'Summary'
+
+    # Contact information
+    - name: contact_url
+      label: 'Web site'
+    - name: contact_email
+      label: 'E-Mail'
+    - name: contact_phone
+      label: 'Telephone number'
+    - name: contact_fax
+      label: 'Fax number'
+    - name: contact_address_physical
+      label: 'Physical address'
+    - name: contact_address_postal
+      label: 'Postal address'
+    # TODO: do we want to unwind addresses into several fields?
+
+    # Country of origin
+    # - For individuals, their nationality at birth
+    # - For companies, the jurisdiction in which they are registered
+    - name: origin_country
+      label: 'Country'
+
+    # Built-in external identifiers
+    - name: xid_popolo
+      service_url: 'http://za-new-import.popit.mysociety.org/'
+      service_label: 'PopIt for South Africa'
+      label: 'Popolo ID'
+      hidden: true
+    - name: xurl_peoples_assembly
+      service_url: 'http://www.pa.org.za/'
+      service_label: "People's Assembly in South Africa"
+      label: "People's Assembly URL"
+      hidden: true
+    - name: xurl_whos_who
+      service_url: 'http://whoswho.co.za/'
+      service_label: "Who's Who SA"
+      label: "Who's Who URL"
+      hidden: true
+
+    # Profile images
+    # TODO: revamp when grano has proper image support.
+    # https://github.com/granoproject/grano/issues/55
+    - name: image_full
+      label: 'Full-size image'
+      datatype: file
+      hidden: true
+    - name: image_full_credit
+      label: 'Full-size image credit'
+      hidden: true
+    - name: image_thumb
+      label: 'Thumbnail image'
+      datatype: file
+      hidden: true
+    - name: image_thumb_credit
+      label: 'Thumbnail image credit'
+      hidden: true
+
+
+#####################################################################
+# Entity: Person
+#####################################################################
+- name: 'Person'
+  label: 'Person'
+  description: 'A natural person'
+  hidden: false
+  obj: entity
+  meta:
+    plural: 'People'
+    see_also: 'http://popoloproject.com/specs/person.html'
+  attributes:
+    - name: given_name
+      label: 'Given name'
+    - name: family_name
+      label: 'Family name'
+    - name: gender
+      label: 'Gender'
+      # TODO: we need enums
+      # https://github.com/granoproject/grano/issues/47
+      values: ['male', 'female', 'other']
+    - name: honorific_prefix
+      label: 'Honorific prefix'
+    - name: date_birth
+      label: 'Date of birth'
+      datatype: datetime
+    - name: birth_town
+      label: 'Birth town'
+    # TODO: do we really want these?
+    - name: display_name
+      label: 'Name used for display'
+      hidden: true
+    - name: full_name
+      label: 'Full name'
+      hidden: true
+    - name: national_id
+      label: ID number
+    - name: passport_number
+      label: Passport number
+
+
+#####################################################################
+# Entity: Organization
+#####################################################################
+- name: 'Organization'
+  label: 'Organization'
+  description: 'A legal entity or state institution'
+  hidden: false
+  obj: 'entity'
+  meta:
+    plural: 'Organizations'
+    see_also: 'http://popoloproject.com/specs/organization.html'
+  attributes:
+    # A registration number, e.g. with a company register or non-profit
+    # register.
+    - name: registration_number
+      label: 'Registration number'
+    - name: industry
+      label: 'Industry'
+    - name: tax_number
+      label: 'Tax number'
+    - name: registration_status
+      label: 'Registration status'
+    - name: classification
+      label: 'Classification'
+    - name: date_founding
+      label: 'Date of founding'
+      datatype: datetime
+    - name: date_dissolution
+      label: 'Date of dissolution'
+      datatype: datetime
+    - name: legal_form
+      label: 'Legal form'
+
+
+#####################################################################
+# Entity: PublicCompany
+#####################################################################
+- name: 'Company'
+  label: 'Company'
+  description: 'A company traded on a public stock market'
+  hidden: false
+  obj: 'entity'
+  parent: 'Organization'
+  meta:
+    plural: 'Companies'
+  attributes:
+    - name: ticker_symbol
+      label: 'Ticker symbol'
+    - name: listing_status
+      label: 'Status of stock listing'
+    - name: listing_exchange
+      label: 'Stock exchange'
+
+
+#####################################################################
+# Entity: Committee
+#####################################################################
+- name: 'Committee'
+  label: 'Committee'
+  description: 'A committee of an organization or institution'
+  hidden: false
+  obj: 'entity'
+  meta:
+    plural: 'Committees'
+  attributes: []
+
+
+#####################################################################
+# Entity: NonProfit
+#####################################################################
+- name: 'NonProfit'
+  label: 'Not for Profit'
+  description: 'A charitable or non-profit organization'
+  hidden: false
+  parent: 'Organization'
+  obj: 'entity'
+  meta:
+    plural: 'Non-profits'
+  attributes: []
+
+
+#####################################################################
+# Entity: PoliticalParty
+#####################################################################
+- name: 'PoliticalParty'
+  label: 'Political party'
+  description: 'A political party'
+  hidden: false
+  obj: 'entity'
+  meta:
+    plural: 'Political parties'
+  attributes: []
+
+
+#####################################################################
+# Entity: EducationalInstitution
+#####################################################################
+- name: 'EducationalInstitution'
+  label: 'Educational institution'
+  description: 'An educational institution'
+  hidden: false
+  parent: 'Organization'
+  obj: 'entity'
+  meta:
+    plural: 'Educational institutions'
+  attributes: []
+
+
+#####################################################################
+# Entity: LegalCase
+#####################################################################
+- name: 'LegalCase'
+  label: 'Legal case'
+  description: 'A case heard before court or settled otherwise'
+  hidden: false
+  obj: 'entity'
+  meta:
+    plural: 'Court cases'
+  attributes:
+    - name: case_no
+      label: 'Offical case number'
+    - name: case_title
+      label: 'Offical case title'
+    - name: date_start_hearing
+      label: 'Hearing start date'
+      datatype: datetime
+    - name: date_end_hearing
+      label: 'Hearing end date'
+      datatype: datetime
+    - name: date_decision
+      label: 'Date decided'
+      datatype: datetime
+    - name: citation
+      label: 'Case citation'
+
+
+#####################################################################
+# Relation: Relation (base schema)
+#####################################################################
+- name: 'Relation'
+  label: 'Relation base schema'
+  hidden: true
+  obj: relation
+  attributes:
+    - name: date_start
+      label: 'Start date'
+      datatype: datetime
+    - name: date_end
+      label: 'End date'
+      datatype: datetime
+
+
+#####################################################################
+# Relation: Membership
+#####################################################################
+- name: 'Membership'
+  label: 'Member'
+  description: 'An entity is a member of an organization'
+  hidden: false
+  parent: 'Relation'
+  obj: relation
+  meta:
+    plural: 'Memberships'
+    see_also: 'http://popoloproject.com/specs/membership.html'
+    section_label: 'Memberships'
+    section_table:
+      role: 'Role'
+      status: 'Status'
+  attributes:
+    - name: role
+      label: 'Role'
+    - name: status
+      label: 'Status'
+
+
+#####################################################################
+# Relation: Directorship
+#####################################################################
+- name: 'Directorship'
+  label: 'Director'
+  description: 'An entity is a director of an organization'
+  hidden: false
+  parent: 'Relation'
+  obj: relation
+  meta:
+    plural: 'Directorships'
+    schema_text: >
+      Directorships are held by members of an organization's board of directors.
+      Some directors might also serve as officers, depending on the organization.
+  attributes:
+    - name: status
+      label: 'Status'
+
+
+#####################################################################
+# Relation: Office
+#####################################################################
+- name: 'Office'
+  label: 'Officer'
+  description: 'An entity is an officer of an organization'
+  hidden: false
+  parent: 'Relation'
+  obj: relation
+  meta:
+    plural: 'Offices'
+    schema_text: >
+      Officers are elected by an organization's board of directors. Offices include
+      CEO, President and Secretary. Some officers might also
+      serve as directors, depending on the organization.
+  attributes:
+    - name: role
+      label: 'Role'
+    - name: status
+      label: 'Status'
+
+
+#####################################################################
+# Relation: Partnership
+#####################################################################
+- name: 'Partnership'
+  label: 'Partner'
+  description: 'Two entities are associated by some type of agreement'
+  hidden: false
+  parent: 'Relation'
+  obj: relation
+  meta:
+    plural: 'Partnerships'
+  attributes:
+    - name: extent
+      label: 'Extent'
+
+
+#####################################################################
+# Relation: Personal
+#####################################################################
+- name: 'Personal'
+  label: 'Personal'
+  description: 'Personal relationships, such as friendship or family'
+  hidden: false
+  parent: 'Relation'
+  obj: relation
+  meta:
+    plural: 'Personal ties'
+  attributes:
+    - name: type
+      label: 'Type'
+
+
+#####################################################################
+# Relation: Family
+#####################################################################
+- name: 'Family'
+  label: 'Family'
+  description: 'Two entities are members of the same family'
+  hidden: false
+  parent: 'Personal'
+  obj: relation
+  attributes: []
+
+
+#####################################################################
+# Relation: FinancialRelation
+#####################################################################
+- name: 'FinancialRelation'
+  label: 'Financial relation'
+  description: 'A generic financial relation'
+  hidden: false
+  parent: 'Relation'
+  obj: relation
+  meta:
+    plural: 'Financial ties'
+  attributes: []
+
+
+#####################################################################
+# Relation: FinancialInterest
+#####################################################################
+- name: 'FinancialInterest'
+  label: 'Financial interest'
+  description: 'An entity has a financial interest (e.g. shares) in another'
+  hidden: false
+  parent: 'FinancialRelation'
+  obj: relation
+  meta:
+    plural: 'Financial interests'
+    section_table:
+      nature: 'Nature'
+      nominal_value: 'Value'
+  attributes:
+    - name: nature
+      label: 'Nature of the interest'
+    - name: shares_number
+      label: 'Number of shares'
+    - name: nominal_value
+      label: 'Nominal value'
+
+
+#####################################################################
+# Relation: Donor
+#####################################################################
+- name: 'Donor'
+  label: 'Donor'
+  description: 'An entity has donated (or donates) money to another'
+  hidden: false
+  parent: 'FinancialRelation'
+  obj: relation
+  meta:
+    plural: 'Donors'
+  attributes: []
+
+
+#####################################################################
+# Relation: Education
+#####################################################################
+- name: 'Education'
+  label: 'Education'
+  description: 'An entity received an education from another'
+  hidden: false
+  parent: 'Relation'
+  obj: relation
+  attributes:
+    - name: qualification_name
+      label: 'Name of qualification'
+    - name: level
+      label: 'Level of education'
+
+
+# TODO: create appropriate relations for all person-to-person connection types
+# Financial
+# Affiliations
+# Event

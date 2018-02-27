@@ -79,7 +79,11 @@
       <tr>
         <th>&nbsp;</th>
         {% for k, v in section.schema.meta.get('section_table', {}).items() %}
-          <th>{{v}}</th>
+          {% if v == 'Amount' %}
+            <th style="text-align:right;">{{v}}</th>
+          {% else %}
+            <th>{{v}}</th>
+          {% endif %}
         {% endfor %}
         <th>Dates</th>
         <th>Source</th>
@@ -90,7 +94,11 @@
             {{ entity_link(relation.other) }}
           </td>
           {% for k, v in section.schema.meta.get('section_table', {}).items() %}
-            <td>{{ relation.props.get(k) or '-' }}</td>
+            {% if k == 'amount' %}
+              <td style="text-align:right;">{{ relation.props.get(k) or '-' }}</td>
+            {% else %}
+              <td>{{ relation.props.get(k) or '-' }}</td>
+            {% endif %}
           {% endfor %}
           <td width="10%">
             {{ relation_ts(relation) }}

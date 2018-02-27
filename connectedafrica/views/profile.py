@@ -10,6 +10,12 @@ from connectedafrica.util.relations import load_relations
 
 blueprint = Blueprint('profile', __name__)
 
+def get_top(schema):
+    query = grano.entities.query()
+    query = query.filter('schema', schema)
+    query = query.filter('sort', '-degree')
+    return query.limit(7)
+
 
 def display_name(entity=None, data_dict=None):
     '''
@@ -56,9 +62,15 @@ def fwd_view(id):
 def view(id, slug):
     entity = grano.entities.by_id(id)
     relation_sections = load_relations(entity, id, slug)
+    degree = entity.get("degree")
+    orgs = get_top(['Organization', 'Company', 'NonProfit'])
+    people = get_top('Person')
     return render_template('profile.html',
                            entity=entity,
                            properties=Properties(entity),
                            display_name=display_name(entity),
                            source_map=source_map(entity),
-                           relation_sections=relation_sections)
+                           relation_sections=relation_sections,
+                           orgs=orgs, 
+                           people=people,
+                           degree=degree)

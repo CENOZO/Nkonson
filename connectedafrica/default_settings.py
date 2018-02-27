@@ -8,15 +8,18 @@ FLATPAGES_EXTENSION = '.md'
 
 CACHE_TYPE = 'simple'
 
-APP_NAME = 'Siyazana'
-APP_SLOGAN = 'We know each other'
+APP_NAME = 'NKonson'
+APP_SLOGAN = 'Connecting People and Companies...'
 
 # Force HTTPS here:
 PREFERRED_URL_SCHEME = os.getenv('GRANO_URL_SCHEME', 'http')
 
-GRANO_HOST = os.environ.get('GRANO_HOST', 'http://beta.grano.cc/')
-GRANO_APIKEY = os.environ.get('GRANO_APIKEY')
-GRANO_PROJECT = os.environ.get('GRANO_PROJECT', 'southafrica')
+# GRANO_HOST = os.environ.get('GRANO_HOST', 'http://beta.grano.cc/')
+GRANO_HOST = os.environ.get('GRANO_HOST', 'http://grano.nanoapp.io/')
+
+GRANO_APIKEY = os.environ.get('GRANO_APIKEY', '5oj3akecjci1tj5')
+# GRANO_PROJECT = os.environ.get('GRANO_PROJECT', 'southafrica')
+GRANO_PROJECT = os.environ.get('GRANO_PROJECT', 'nkonson-0001')
 
 WINDEEDS_USER = os.environ.get('WINDEEDS_USER')
 WINDEEDS_PASS = os.environ.get('WINDEEDS_PASS')

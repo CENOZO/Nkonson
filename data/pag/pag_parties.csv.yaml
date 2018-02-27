@@ -1,0 +1,16 @@
+
+entities:
+  party:
+    schema: 'PoliticalParty'
+    source_url_column: 'data_source'
+    columns:
+     - column: 'country'
+       property: 'origin_country'
+     - column: 'country_code'
+       property: 'country_code'
+     - column: 'party_name'
+       property: 'name'
+     - column: 'org_category'
+       property: 'classification'
+     - column: 'legal_form'
+       property: 'legal_form'

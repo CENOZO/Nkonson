@@ -1,0 +1,27 @@
+
+entities:
+  person:
+    schema: 'Person'
+    source_url_column: 'data_source'
+    columns:
+     - column: 'person_name'
+       property: 'name'
+  company:
+    schema: 'Company'
+    source_url_column: 'data_source'
+    columns:
+     - column: 'company_name'
+       property: 'name'
+relations:
+  membership:
+    schema: 'Directorship'
+    source_url_column: 'data_source'
+    source: 'person'
+    target: 'company'
+    columns:
+     - column: 'position'
+       property: 'role'
+       skip_empty: true
+     - column: 'date_position'
+       property: 'date_position'
+       skip_empty: true

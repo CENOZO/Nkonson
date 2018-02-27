@@ -1,0 +1,27 @@
+entities:
+  company:
+    schema: 'Company'
+    source_url_column: 'data_source'
+    columns:
+      - column: 'country'
+        property: 'origin_country'
+      - column: 'country_code'
+        property: 'country_code'
+      - column: 'industry'
+        property: 'industry'
+      - column: 'company_name'
+        property: 'name'
+      - column: 'organization_type'
+        property: 'classification'
+        skip_empty: true
+      - column: 'data_source'
+        property: 'data_source'
+        skip_empty: true
+      - column: 'scraped_time'
+        property: 'scraped_time'
+        skip_empty: true
+
+
+
+
+

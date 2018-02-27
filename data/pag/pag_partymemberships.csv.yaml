@@ -1,0 +1,48 @@
+entities:
+  person:
+    schema: 'Person'
+    source_url_column: 'data_source'
+    columns:
+     - column: 'person_name'
+       property: 'name'
+  org:
+    schema: 'Organization'
+    source_url_column: 'data_source'
+    columns:
+     - column: 'party_name'
+       property: 'name'
+relations:
+  membership:
+    schema: 'Membership'
+    source_url_column: 'source_url'
+    source: 'person'
+    target: 'org'
+    columns:
+     - column: 'role'
+       property: 'role'
+       skip_empty: true
+       unique: true
+     - column: 'start_date'
+       property: 'date_start'
+       type: datetime
+       skip_empty: true
+       format:
+          day: '%Y-%m-%d'
+          month: '%Y-%m'
+          year: '%Y'
+     - column: 'end_date'
+       property: 'date_end'
+       type: datetime
+       skip_empty: true
+       format:
+          day: '%Y-%m-%d'
+          month: '%Y-%m'
+          year: '%Y'
+     - column: 'constituency'
+       property: 'constituency'
+     - column: 'party_status'
+       property: 'party_status'
+     - column: 'region'
+       property: 'region'
+     - column: 'scraped_time'
+       property: 'scraped_time'
